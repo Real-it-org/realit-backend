@@ -14,11 +14,19 @@ describe('AuthService', () => {
     users: {
       findFirst: jest.fn(),
       create: jest.fn(),
+      findUnique: jest.fn(),
+    },
+    refresh_tokens: {
+      create: jest.fn(),
+      update: jest.fn(),
+      delete: jest.fn(),
+      findUnique: jest.fn(),
     },
   };
 
   const mockJwtService = {
-    sign: jest.fn().mockReturnValue('signed-token'),
+    signAsync: jest.fn().mockResolvedValue('signed-token'),
+    decode: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -40,12 +48,13 @@ describe('AuthService', () => {
   });
 
   describe('signup', () => {
-    it('should create a new user and return a token', async () => {
+    it('should create a new user and return tokens', async () => {
       mockPrisma.users.findFirst.mockResolvedValue(null);
       mockPrisma.users.create.mockImplementation(async ({ data }) => ({
         ...data,
         id: 'uuid-123',
       }));
+      mockPrisma.refresh_tokens.create.mockResolvedValue({});
 
       const result = await service.signup({
         email: 'test@test.com',
@@ -54,8 +63,12 @@ describe('AuthService', () => {
         password: 'password123',
       });
 
-      expect(result).toEqual({ access_token: 'signed-token' });
+      expect(result).toEqual({
+        access_token: 'signed-token',
+        refresh_token: 'signed-token'
+      });
       expect(mockPrisma.users.create).toHaveBeenCalled();
+      expect(mockPrisma.refresh_tokens.create).toHaveBeenCalled();
     });
 
     it('should throw ConflictException if email or username exists', async () => {
@@ -73,20 +86,25 @@ describe('AuthService', () => {
   });
 
   describe('login', () => {
-    it('should return token for valid credentials', async () => {
+    it('should return tokens for valid credentials', async () => {
       const passwordHash = await bcrypt.hash('password123', 12);
       mockPrisma.users.findFirst.mockResolvedValue({
         id: 'uuid-123',
+        email: 'test@test.com',
         password_hash: passwordHash,
         is_active: true,
       });
+      mockPrisma.refresh_tokens.create.mockResolvedValue({});
 
       const result = await service.login({
         identifier: 'test@test.com',
         password: 'password123',
       });
 
-      expect(result).toEqual({ access_token: 'signed-token' });
+      expect(result).toEqual({
+        access_token: 'signed-token',
+        refresh_token: 'signed-token'
+      });
     });
 
     it('should throw UnauthorizedException if user not found', async () => {
