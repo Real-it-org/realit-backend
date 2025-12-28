@@ -19,7 +19,8 @@ import { Tokens } from './types';
 import { RtGuard } from './guards/rt.guard';
 import { GetCurrentUser } from './decorators/get-current-user.decorator';
 
-import { Public } from './decorators/public.decorator';
+// import { Public } from './decorators/public.decorator';
+import { Public } from 'src/auth/decorators/public.decorator';
 
 @ApiTags('Auth')
 @Controller('auth')
