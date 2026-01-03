@@ -2,7 +2,7 @@
 /dist
 /node_modules
 /build
-
+/src/realit-frontend.code-workspace
 # Logs
 logs
 *.log
