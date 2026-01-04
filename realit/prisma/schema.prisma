@@ -9,31 +9,125 @@ datasource db {
 }
 
 model users {
-  id                String   @id @default(uuid())
-  email             String   @db.Citext
-  username          String   @db.Citext
-  display_name      String
-  password_hash     String
+  id            String @id @default(uuid())
+  email         String @db.Citext
+  username      String @db.Citext
+  password_hash String
 
-  is_email_verified Boolean  @default(false)
-  is_active         Boolean  @default(true)
+  is_email_verified Boolean @default(false)
+  is_active         Boolean @default(true)
 
-  created_at        DateTime @default(now())
-  updated_at        DateTime @default(now())
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+
+  refresh_tokens refresh_tokens[]
+  profile        profiles?
 
   @@unique([email])
   @@unique([username])
-
-  refresh_tokens    refresh_tokens[]
 }
 
 model refresh_tokens {
-  id          String   @id @default(uuid())
-  user_id     String
-  token_hash  String
-  is_revoked  Boolean  @default(false)
-  expires_at  DateTime
-  created_at  DateTime @default(now())
-  
-  user        users    @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  id         String   @id @default(uuid())
+  user_id    String
+  token_hash String
+  is_revoked Boolean  @default(false)
+  expires_at DateTime
+  created_at DateTime @default(now())
+
+  user users @relation(fields: [user_id], references: [id], onDelete: Cascade)
+}
+
+enum MediaType {
+  image
+  video
+}
+
+enum VerificationStatus {
+  verified
+  ai
+  unverified
+}
+
+model profiles {
+  id      String @id @default(uuid())
+  user_id String @unique
+  user    users  @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  username     String  @unique @db.Citext
+  display_name String?
+  bio          String?
+  avatar_url   String?
+  website      String?
+
+  is_private Boolean @default(false)
+
+  followers_count Int @default(0)
+  following_count Int @default(0)
+  posts_count     Int @default(0)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+
+  followers follows[]  @relation("following")
+  following follows[]  @relation("follower")
+  posts     posts[]
+  likes     likes[]
+  comments  comments[]
+}
+
+model follows {
+  follower_id String
+  follower    profiles @relation("follower", fields: [follower_id], references: [id], onDelete: Cascade)
+
+  following_id String
+  following    profiles @relation("following", fields: [following_id], references: [id], onDelete: Cascade)
+
+  created_at DateTime @default(now())
+
+  @@id([follower_id, following_id])
+}
+
+model posts {
+  id         String   @id @default(uuid())
+  profile_id String
+  profile    profiles @relation(fields: [profile_id], references: [id], onDelete: Cascade)
+
+  caption             String?
+  media_url           String
+  media_type          MediaType
+  verification_status VerificationStatus @default(unverified)
+
+  likes_count    Int @default(0)
+  comments_count Int @default(0)
+
+  created_at DateTime @default(now())
+
+  likes    likes[]
+  comments comments[]
+}
+
+model likes {
+  profile_id String
+  profile    profiles @relation(fields: [profile_id], references: [id], onDelete: Cascade)
+
+  post_id String
+  post    posts  @relation(fields: [post_id], references: [id], onDelete: Cascade)
+
+  created_at DateTime @default(now())
+
+  @@id([profile_id, post_id])
+}
+
+model comments {
+  id      String @id @default(uuid())
+  post_id String
+  post    posts  @relation(fields: [post_id], references: [id], onDelete: Cascade)
+
+  profile_id String
+  profile    profiles @relation(fields: [profile_id], references: [id], onDelete: Cascade)
+
+  content String
+
+  created_at DateTime @default(now())
 }

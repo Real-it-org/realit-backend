@@ -9,7 +9,18 @@
 * 🟢 You can import this file directly.
 */
 
+export const MediaType = {
+  image: 'image',
+  video: 'video'
+} as const
+
+export type MediaType = (typeof MediaType)[keyof typeof MediaType]
 
 
-// This file is empty because there are no enums in the schema.
-export {}
+export const VerificationStatus = {
+  verified: 'verified',
+  ai: 'ai',
+  unverified: 'unverified'
+} as const
+
+export type VerificationStatus = (typeof VerificationStatus)[keyof typeof VerificationStatus]

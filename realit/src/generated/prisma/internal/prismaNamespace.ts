@@ -385,7 +385,12 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 export const ModelName = {
   users: 'users',
-  refresh_tokens: 'refresh_tokens'
+  refresh_tokens: 'refresh_tokens',
+  profiles: 'profiles',
+  follows: 'follows',
+  posts: 'posts',
+  likes: 'likes',
+  comments: 'comments'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -401,7 +406,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "users" | "refresh_tokens"
+    modelProps: "users" | "refresh_tokens" | "profiles" | "follows" | "posts" | "likes" | "comments"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -553,6 +558,376 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    profiles: {
+      payload: Prisma.$profilesPayload<ExtArgs>
+      fields: Prisma.profilesFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.profilesFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$profilesPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.profilesFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$profilesPayload>
+        }
+        findFirst: {
+          args: Prisma.profilesFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$profilesPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.profilesFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$profilesPayload>
+        }
+        findMany: {
+          args: Prisma.profilesFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$profilesPayload>[]
+        }
+        create: {
+          args: Prisma.profilesCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$profilesPayload>
+        }
+        createMany: {
+          args: Prisma.profilesCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.profilesCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$profilesPayload>[]
+        }
+        delete: {
+          args: Prisma.profilesDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$profilesPayload>
+        }
+        update: {
+          args: Prisma.profilesUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$profilesPayload>
+        }
+        deleteMany: {
+          args: Prisma.profilesDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.profilesUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.profilesUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$profilesPayload>[]
+        }
+        upsert: {
+          args: Prisma.profilesUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$profilesPayload>
+        }
+        aggregate: {
+          args: Prisma.ProfilesAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateProfiles>
+        }
+        groupBy: {
+          args: Prisma.profilesGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ProfilesGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.profilesCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ProfilesCountAggregateOutputType> | number
+        }
+      }
+    }
+    follows: {
+      payload: Prisma.$followsPayload<ExtArgs>
+      fields: Prisma.followsFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.followsFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$followsPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.followsFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$followsPayload>
+        }
+        findFirst: {
+          args: Prisma.followsFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$followsPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.followsFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$followsPayload>
+        }
+        findMany: {
+          args: Prisma.followsFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$followsPayload>[]
+        }
+        create: {
+          args: Prisma.followsCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$followsPayload>
+        }
+        createMany: {
+          args: Prisma.followsCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.followsCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$followsPayload>[]
+        }
+        delete: {
+          args: Prisma.followsDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$followsPayload>
+        }
+        update: {
+          args: Prisma.followsUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$followsPayload>
+        }
+        deleteMany: {
+          args: Prisma.followsDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.followsUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.followsUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$followsPayload>[]
+        }
+        upsert: {
+          args: Prisma.followsUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$followsPayload>
+        }
+        aggregate: {
+          args: Prisma.FollowsAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateFollows>
+        }
+        groupBy: {
+          args: Prisma.followsGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FollowsGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.followsCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FollowsCountAggregateOutputType> | number
+        }
+      }
+    }
+    posts: {
+      payload: Prisma.$postsPayload<ExtArgs>
+      fields: Prisma.postsFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.postsFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$postsPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.postsFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$postsPayload>
+        }
+        findFirst: {
+          args: Prisma.postsFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$postsPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.postsFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$postsPayload>
+        }
+        findMany: {
+          args: Prisma.postsFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$postsPayload>[]
+        }
+        create: {
+          args: Prisma.postsCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$postsPayload>
+        }
+        createMany: {
+          args: Prisma.postsCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.postsCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$postsPayload>[]
+        }
+        delete: {
+          args: Prisma.postsDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$postsPayload>
+        }
+        update: {
+          args: Prisma.postsUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$postsPayload>
+        }
+        deleteMany: {
+          args: Prisma.postsDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.postsUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.postsUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$postsPayload>[]
+        }
+        upsert: {
+          args: Prisma.postsUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$postsPayload>
+        }
+        aggregate: {
+          args: Prisma.PostsAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePosts>
+        }
+        groupBy: {
+          args: Prisma.postsGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PostsGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.postsCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PostsCountAggregateOutputType> | number
+        }
+      }
+    }
+    likes: {
+      payload: Prisma.$likesPayload<ExtArgs>
+      fields: Prisma.likesFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.likesFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$likesPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.likesFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$likesPayload>
+        }
+        findFirst: {
+          args: Prisma.likesFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$likesPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.likesFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$likesPayload>
+        }
+        findMany: {
+          args: Prisma.likesFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$likesPayload>[]
+        }
+        create: {
+          args: Prisma.likesCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$likesPayload>
+        }
+        createMany: {
+          args: Prisma.likesCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.likesCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$likesPayload>[]
+        }
+        delete: {
+          args: Prisma.likesDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$likesPayload>
+        }
+        update: {
+          args: Prisma.likesUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$likesPayload>
+        }
+        deleteMany: {
+          args: Prisma.likesDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.likesUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.likesUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$likesPayload>[]
+        }
+        upsert: {
+          args: Prisma.likesUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$likesPayload>
+        }
+        aggregate: {
+          args: Prisma.LikesAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateLikes>
+        }
+        groupBy: {
+          args: Prisma.likesGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LikesGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.likesCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LikesCountAggregateOutputType> | number
+        }
+      }
+    }
+    comments: {
+      payload: Prisma.$commentsPayload<ExtArgs>
+      fields: Prisma.commentsFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.commentsFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$commentsPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.commentsFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$commentsPayload>
+        }
+        findFirst: {
+          args: Prisma.commentsFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$commentsPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.commentsFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$commentsPayload>
+        }
+        findMany: {
+          args: Prisma.commentsFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$commentsPayload>[]
+        }
+        create: {
+          args: Prisma.commentsCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$commentsPayload>
+        }
+        createMany: {
+          args: Prisma.commentsCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.commentsCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$commentsPayload>[]
+        }
+        delete: {
+          args: Prisma.commentsDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$commentsPayload>
+        }
+        update: {
+          args: Prisma.commentsUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$commentsPayload>
+        }
+        deleteMany: {
+          args: Prisma.commentsDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.commentsUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.commentsUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$commentsPayload>[]
+        }
+        upsert: {
+          args: Prisma.commentsUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$commentsPayload>
+        }
+        aggregate: {
+          args: Prisma.CommentsAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateComments>
+        }
+        groupBy: {
+          args: Prisma.commentsGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CommentsGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.commentsCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CommentsCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -596,7 +971,6 @@ export const UsersScalarFieldEnum = {
   id: 'id',
   email: 'email',
   username: 'username',
-  display_name: 'display_name',
   password_hash: 'password_hash',
   is_email_verified: 'is_email_verified',
   is_active: 'is_active',
@@ -619,6 +993,69 @@ export const Refresh_tokensScalarFieldEnum = {
 export type Refresh_tokensScalarFieldEnum = (typeof Refresh_tokensScalarFieldEnum)[keyof typeof Refresh_tokensScalarFieldEnum]
 
 
+export const ProfilesScalarFieldEnum = {
+  id: 'id',
+  user_id: 'user_id',
+  username: 'username',
+  display_name: 'display_name',
+  bio: 'bio',
+  avatar_url: 'avatar_url',
+  website: 'website',
+  is_private: 'is_private',
+  followers_count: 'followers_count',
+  following_count: 'following_count',
+  posts_count: 'posts_count',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+} as const
+
+export type ProfilesScalarFieldEnum = (typeof ProfilesScalarFieldEnum)[keyof typeof ProfilesScalarFieldEnum]
+
+
+export const FollowsScalarFieldEnum = {
+  follower_id: 'follower_id',
+  following_id: 'following_id',
+  created_at: 'created_at'
+} as const
+
+export type FollowsScalarFieldEnum = (typeof FollowsScalarFieldEnum)[keyof typeof FollowsScalarFieldEnum]
+
+
+export const PostsScalarFieldEnum = {
+  id: 'id',
+  profile_id: 'profile_id',
+  caption: 'caption',
+  media_url: 'media_url',
+  media_type: 'media_type',
+  verification_status: 'verification_status',
+  likes_count: 'likes_count',
+  comments_count: 'comments_count',
+  created_at: 'created_at'
+} as const
+
+export type PostsScalarFieldEnum = (typeof PostsScalarFieldEnum)[keyof typeof PostsScalarFieldEnum]
+
+
+export const LikesScalarFieldEnum = {
+  profile_id: 'profile_id',
+  post_id: 'post_id',
+  created_at: 'created_at'
+} as const
+
+export type LikesScalarFieldEnum = (typeof LikesScalarFieldEnum)[keyof typeof LikesScalarFieldEnum]
+
+
+export const CommentsScalarFieldEnum = {
+  id: 'id',
+  post_id: 'post_id',
+  profile_id: 'profile_id',
+  content: 'content',
+  created_at: 'created_at'
+} as const
+
+export type CommentsScalarFieldEnum = (typeof CommentsScalarFieldEnum)[keyof typeof CommentsScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -633,6 +1070,14 @@ export const QueryMode = {
 } as const
 
 export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
+
+
+export const NullsOrder = {
+  first: 'first',
+  last: 'last'
+} as const
+
+export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 
 
 
@@ -687,6 +1132,48 @@ export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'In
  * Reference to a field of type 'Int[]'
  */
 export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+/**
+ * Reference to a field of type 'MediaType'
+ */
+export type EnumMediaTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MediaType'>
+    
+
+
+/**
+ * Reference to a field of type 'MediaType[]'
+ */
+export type ListEnumMediaTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MediaType[]'>
+    
+
+
+/**
+ * Reference to a field of type 'VerificationStatus'
+ */
+export type EnumVerificationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'VerificationStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'VerificationStatus[]'
+ */
+export type ListEnumVerificationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'VerificationStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Float'
+ */
+export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
+
+
+/**
+ * Reference to a field of type 'Float[]'
+ */
+export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
     
 
 /**
@@ -786,6 +1273,11 @@ export type PrismaClientOptions = ({
 export type GlobalOmitConfig = {
   users?: Prisma.usersOmit
   refresh_tokens?: Prisma.refresh_tokensOmit
+  profiles?: Prisma.profilesOmit
+  follows?: Prisma.followsOmit
+  posts?: Prisma.postsOmit
+  likes?: Prisma.likesOmit
+  comments?: Prisma.commentsOmit
 }
 
 /* Types for Logging */

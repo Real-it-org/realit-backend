@@ -52,7 +52,12 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   users: 'users',
-  refresh_tokens: 'refresh_tokens'
+  refresh_tokens: 'refresh_tokens',
+  profiles: 'profiles',
+  follows: 'follows',
+  posts: 'posts',
+  likes: 'likes',
+  comments: 'comments'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -75,7 +80,6 @@ export const UsersScalarFieldEnum = {
   id: 'id',
   email: 'email',
   username: 'username',
-  display_name: 'display_name',
   password_hash: 'password_hash',
   is_email_verified: 'is_email_verified',
   is_active: 'is_active',
@@ -98,6 +102,69 @@ export const Refresh_tokensScalarFieldEnum = {
 export type Refresh_tokensScalarFieldEnum = (typeof Refresh_tokensScalarFieldEnum)[keyof typeof Refresh_tokensScalarFieldEnum]
 
 
+export const ProfilesScalarFieldEnum = {
+  id: 'id',
+  user_id: 'user_id',
+  username: 'username',
+  display_name: 'display_name',
+  bio: 'bio',
+  avatar_url: 'avatar_url',
+  website: 'website',
+  is_private: 'is_private',
+  followers_count: 'followers_count',
+  following_count: 'following_count',
+  posts_count: 'posts_count',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+} as const
+
+export type ProfilesScalarFieldEnum = (typeof ProfilesScalarFieldEnum)[keyof typeof ProfilesScalarFieldEnum]
+
+
+export const FollowsScalarFieldEnum = {
+  follower_id: 'follower_id',
+  following_id: 'following_id',
+  created_at: 'created_at'
+} as const
+
+export type FollowsScalarFieldEnum = (typeof FollowsScalarFieldEnum)[keyof typeof FollowsScalarFieldEnum]
+
+
+export const PostsScalarFieldEnum = {
+  id: 'id',
+  profile_id: 'profile_id',
+  caption: 'caption',
+  media_url: 'media_url',
+  media_type: 'media_type',
+  verification_status: 'verification_status',
+  likes_count: 'likes_count',
+  comments_count: 'comments_count',
+  created_at: 'created_at'
+} as const
+
+export type PostsScalarFieldEnum = (typeof PostsScalarFieldEnum)[keyof typeof PostsScalarFieldEnum]
+
+
+export const LikesScalarFieldEnum = {
+  profile_id: 'profile_id',
+  post_id: 'post_id',
+  created_at: 'created_at'
+} as const
+
+export type LikesScalarFieldEnum = (typeof LikesScalarFieldEnum)[keyof typeof LikesScalarFieldEnum]
+
+
+export const CommentsScalarFieldEnum = {
+  id: 'id',
+  post_id: 'post_id',
+  profile_id: 'profile_id',
+  content: 'content',
+  created_at: 'created_at'
+} as const
+
+export type CommentsScalarFieldEnum = (typeof CommentsScalarFieldEnum)[keyof typeof CommentsScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -112,4 +179,12 @@ export const QueryMode = {
 } as const
 
 export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
+
+
+export const NullsOrder = {
+  first: 'first',
+  last: 'last'
+} as const
+
+export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 
