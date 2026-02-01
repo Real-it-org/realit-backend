@@ -6,7 +6,10 @@ export class PostResponseDto {
     id: string;
 
     @ApiProperty()
-    caption: string;
+    heading: string;
+
+    @ApiProperty()
+    description: string;
 
     @ApiProperty()
     media_url: string;

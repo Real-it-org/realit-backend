@@ -49,6 +49,14 @@ enum VerificationStatus {
   unverified
 }
 
+enum MediaStatus {
+  pending
+  uploaded
+  processing
+  active
+  failed
+}
+
 model profiles {
   id      String @id @default(uuid())
   user_id String @unique
@@ -93,9 +101,9 @@ model posts {
   profile_id String
   profile    profiles @relation(fields: [profile_id], references: [id], onDelete: Cascade)
 
-  caption             String?
-  media_url           String
-  media_type          MediaType
+  heading             String?
+  description         String?
+  media               post_media[]
   verification_status VerificationStatus @default(unverified)
 
   likes_count    Int @default(0)
@@ -128,6 +136,21 @@ model comments {
   profile    profiles @relation(fields: [profile_id], references: [id], onDelete: Cascade)
 
   content String
+
+  created_at DateTime @default(now())
+}
+
+model post_media {
+  id          String      @id @default(uuid())
+  post_id     String
+  post        posts       @relation(fields: [post_id], references: [id], onDelete: Cascade)
+  media_url   String
+  media_type  MediaType
+  position    Int
+  status      MediaStatus @default(pending)
+  size_bytes  BigInt
+  object_key  String
+  duration_ms Int?
 
   created_at DateTime @default(now())
 }

@@ -1024,7 +1024,8 @@ export type FollowsScalarFieldEnum = (typeof FollowsScalarFieldEnum)[keyof typeo
 export const PostsScalarFieldEnum = {
   id: 'id',
   profile_id: 'profile_id',
-  caption: 'caption',
+  heading: 'heading',
+  description: 'description',
   media_url: 'media_url',
   media_type: 'media_type',
   verification_status: 'verification_status',

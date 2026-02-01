@@ -51,7 +51,8 @@ export class ProfileService {
 
         return posts.map((post) => ({
             id: post.id,
-            caption: post.caption || '',
+            heading: post.heading || '',
+            description: post.description || '',
             media_url: post.media_url,
             media_type: post.media_type,
             verification_status: post.verification_status,

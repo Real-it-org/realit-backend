@@ -39,7 +39,8 @@ export type PostsSumAggregateOutputType = {
 export type PostsMinAggregateOutputType = {
   id: string | null
   profile_id: string | null
-  caption: string | null
+  heading: string | null
+  description: string | null
   media_url: string | null
   media_type: $Enums.MediaType | null
   verification_status: $Enums.VerificationStatus | null
@@ -51,7 +52,8 @@ export type PostsMinAggregateOutputType = {
 export type PostsMaxAggregateOutputType = {
   id: string | null
   profile_id: string | null
-  caption: string | null
+  heading: string | null
+  description: string | null
   media_url: string | null
   media_type: $Enums.MediaType | null
   verification_status: $Enums.VerificationStatus | null
@@ -63,7 +65,8 @@ export type PostsMaxAggregateOutputType = {
 export type PostsCountAggregateOutputType = {
   id: number
   profile_id: number
-  caption: number
+  heading: number
+  description: number
   media_url: number
   media_type: number
   verification_status: number
@@ -87,7 +90,8 @@ export type PostsSumAggregateInputType = {
 export type PostsMinAggregateInputType = {
   id?: true
   profile_id?: true
-  caption?: true
+  heading?: true
+  description?: true
   media_url?: true
   media_type?: true
   verification_status?: true
@@ -99,7 +103,8 @@ export type PostsMinAggregateInputType = {
 export type PostsMaxAggregateInputType = {
   id?: true
   profile_id?: true
-  caption?: true
+  heading?: true
+  description?: true
   media_url?: true
   media_type?: true
   verification_status?: true
@@ -111,7 +116,8 @@ export type PostsMaxAggregateInputType = {
 export type PostsCountAggregateInputType = {
   id?: true
   profile_id?: true
-  caption?: true
+  heading?: true
+  description?: true
   media_url?: true
   media_type?: true
   verification_status?: true
@@ -210,7 +216,8 @@ export type postsGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
 export type PostsGroupByOutputType = {
   id: string
   profile_id: string
-  caption: string | null
+  heading: string | null
+  description: string | null
   media_url: string
   media_type: $Enums.MediaType
   verification_status: $Enums.VerificationStatus
@@ -245,7 +252,8 @@ export type postsWhereInput = {
   NOT?: Prisma.postsWhereInput | Prisma.postsWhereInput[]
   id?: Prisma.StringFilter<"posts"> | string
   profile_id?: Prisma.StringFilter<"posts"> | string
-  caption?: Prisma.StringNullableFilter<"posts"> | string | null
+  heading?: Prisma.StringNullableFilter<"posts"> | string | null
+  description?: Prisma.StringNullableFilter<"posts"> | string | null
   media_url?: Prisma.StringFilter<"posts"> | string
   media_type?: Prisma.EnumMediaTypeFilter<"posts"> | $Enums.MediaType
   verification_status?: Prisma.EnumVerificationStatusFilter<"posts"> | $Enums.VerificationStatus
@@ -260,7 +268,8 @@ export type postsWhereInput = {
 export type postsOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   profile_id?: Prisma.SortOrder
-  caption?: Prisma.SortOrderInput | Prisma.SortOrder
+  heading?: Prisma.SortOrderInput | Prisma.SortOrder
+  description?: Prisma.SortOrderInput | Prisma.SortOrder
   media_url?: Prisma.SortOrder
   media_type?: Prisma.SortOrder
   verification_status?: Prisma.SortOrder
@@ -278,7 +287,8 @@ export type postsWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.postsWhereInput[]
   NOT?: Prisma.postsWhereInput | Prisma.postsWhereInput[]
   profile_id?: Prisma.StringFilter<"posts"> | string
-  caption?: Prisma.StringNullableFilter<"posts"> | string | null
+  heading?: Prisma.StringNullableFilter<"posts"> | string | null
+  description?: Prisma.StringNullableFilter<"posts"> | string | null
   media_url?: Prisma.StringFilter<"posts"> | string
   media_type?: Prisma.EnumMediaTypeFilter<"posts"> | $Enums.MediaType
   verification_status?: Prisma.EnumVerificationStatusFilter<"posts"> | $Enums.VerificationStatus
@@ -293,7 +303,8 @@ export type postsWhereUniqueInput = Prisma.AtLeast<{
 export type postsOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   profile_id?: Prisma.SortOrder
-  caption?: Prisma.SortOrderInput | Prisma.SortOrder
+  heading?: Prisma.SortOrderInput | Prisma.SortOrder
+  description?: Prisma.SortOrderInput | Prisma.SortOrder
   media_url?: Prisma.SortOrder
   media_type?: Prisma.SortOrder
   verification_status?: Prisma.SortOrder
@@ -313,7 +324,8 @@ export type postsScalarWhereWithAggregatesInput = {
   NOT?: Prisma.postsScalarWhereWithAggregatesInput | Prisma.postsScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"posts"> | string
   profile_id?: Prisma.StringWithAggregatesFilter<"posts"> | string
-  caption?: Prisma.StringNullableWithAggregatesFilter<"posts"> | string | null
+  heading?: Prisma.StringNullableWithAggregatesFilter<"posts"> | string | null
+  description?: Prisma.StringNullableWithAggregatesFilter<"posts"> | string | null
   media_url?: Prisma.StringWithAggregatesFilter<"posts"> | string
   media_type?: Prisma.EnumMediaTypeWithAggregatesFilter<"posts"> | $Enums.MediaType
   verification_status?: Prisma.EnumVerificationStatusWithAggregatesFilter<"posts"> | $Enums.VerificationStatus
@@ -324,7 +336,8 @@ export type postsScalarWhereWithAggregatesInput = {
 
 export type postsCreateInput = {
   id?: string
-  caption?: string | null
+  heading?: string | null
+  description?: string | null
   media_url: string
   media_type: $Enums.MediaType
   verification_status?: $Enums.VerificationStatus
@@ -339,7 +352,8 @@ export type postsCreateInput = {
 export type postsUncheckedCreateInput = {
   id?: string
   profile_id: string
-  caption?: string | null
+  heading?: string | null
+  description?: string | null
   media_url: string
   media_type: $Enums.MediaType
   verification_status?: $Enums.VerificationStatus
@@ -352,7 +366,8 @@ export type postsUncheckedCreateInput = {
 
 export type postsUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  caption?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  heading?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   media_url?: Prisma.StringFieldUpdateOperationsInput | string
   media_type?: Prisma.EnumMediaTypeFieldUpdateOperationsInput | $Enums.MediaType
   verification_status?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
@@ -367,7 +382,8 @@ export type postsUpdateInput = {
 export type postsUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   profile_id?: Prisma.StringFieldUpdateOperationsInput | string
-  caption?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  heading?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   media_url?: Prisma.StringFieldUpdateOperationsInput | string
   media_type?: Prisma.EnumMediaTypeFieldUpdateOperationsInput | $Enums.MediaType
   verification_status?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
@@ -381,7 +397,8 @@ export type postsUncheckedUpdateInput = {
 export type postsCreateManyInput = {
   id?: string
   profile_id: string
-  caption?: string | null
+  heading?: string | null
+  description?: string | null
   media_url: string
   media_type: $Enums.MediaType
   verification_status?: $Enums.VerificationStatus
@@ -392,7 +409,8 @@ export type postsCreateManyInput = {
 
 export type postsUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  caption?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  heading?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   media_url?: Prisma.StringFieldUpdateOperationsInput | string
   media_type?: Prisma.EnumMediaTypeFieldUpdateOperationsInput | $Enums.MediaType
   verification_status?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
@@ -404,7 +422,8 @@ export type postsUpdateManyMutationInput = {
 export type postsUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   profile_id?: Prisma.StringFieldUpdateOperationsInput | string
-  caption?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  heading?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   media_url?: Prisma.StringFieldUpdateOperationsInput | string
   media_type?: Prisma.EnumMediaTypeFieldUpdateOperationsInput | $Enums.MediaType
   verification_status?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
@@ -426,7 +445,8 @@ export type postsOrderByRelationAggregateInput = {
 export type postsCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   profile_id?: Prisma.SortOrder
-  caption?: Prisma.SortOrder
+  heading?: Prisma.SortOrder
+  description?: Prisma.SortOrder
   media_url?: Prisma.SortOrder
   media_type?: Prisma.SortOrder
   verification_status?: Prisma.SortOrder
@@ -443,7 +463,8 @@ export type postsAvgOrderByAggregateInput = {
 export type postsMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   profile_id?: Prisma.SortOrder
-  caption?: Prisma.SortOrder
+  heading?: Prisma.SortOrder
+  description?: Prisma.SortOrder
   media_url?: Prisma.SortOrder
   media_type?: Prisma.SortOrder
   verification_status?: Prisma.SortOrder
@@ -455,7 +476,8 @@ export type postsMaxOrderByAggregateInput = {
 export type postsMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   profile_id?: Prisma.SortOrder
-  caption?: Prisma.SortOrder
+  heading?: Prisma.SortOrder
+  description?: Prisma.SortOrder
   media_url?: Prisma.SortOrder
   media_type?: Prisma.SortOrder
   verification_status?: Prisma.SortOrder
@@ -554,7 +576,8 @@ export type postsUpdateOneRequiredWithoutCommentsNestedInput = {
 
 export type postsCreateWithoutProfileInput = {
   id?: string
-  caption?: string | null
+  heading?: string | null
+  description?: string | null
   media_url: string
   media_type: $Enums.MediaType
   verification_status?: $Enums.VerificationStatus
@@ -567,7 +590,8 @@ export type postsCreateWithoutProfileInput = {
 
 export type postsUncheckedCreateWithoutProfileInput = {
   id?: string
-  caption?: string | null
+  heading?: string | null
+  description?: string | null
   media_url: string
   media_type: $Enums.MediaType
   verification_status?: $Enums.VerificationStatus
@@ -610,7 +634,8 @@ export type postsScalarWhereInput = {
   NOT?: Prisma.postsScalarWhereInput | Prisma.postsScalarWhereInput[]
   id?: Prisma.StringFilter<"posts"> | string
   profile_id?: Prisma.StringFilter<"posts"> | string
-  caption?: Prisma.StringNullableFilter<"posts"> | string | null
+  heading?: Prisma.StringNullableFilter<"posts"> | string | null
+  description?: Prisma.StringNullableFilter<"posts"> | string | null
   media_url?: Prisma.StringFilter<"posts"> | string
   media_type?: Prisma.EnumMediaTypeFilter<"posts"> | $Enums.MediaType
   verification_status?: Prisma.EnumVerificationStatusFilter<"posts"> | $Enums.VerificationStatus
@@ -621,7 +646,8 @@ export type postsScalarWhereInput = {
 
 export type postsCreateWithoutLikesInput = {
   id?: string
-  caption?: string | null
+  heading?: string | null
+  description?: string | null
   media_url: string
   media_type: $Enums.MediaType
   verification_status?: $Enums.VerificationStatus
@@ -635,7 +661,8 @@ export type postsCreateWithoutLikesInput = {
 export type postsUncheckedCreateWithoutLikesInput = {
   id?: string
   profile_id: string
-  caption?: string | null
+  heading?: string | null
+  description?: string | null
   media_url: string
   media_type: $Enums.MediaType
   verification_status?: $Enums.VerificationStatus
@@ -663,7 +690,8 @@ export type postsUpdateToOneWithWhereWithoutLikesInput = {
 
 export type postsUpdateWithoutLikesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  caption?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  heading?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   media_url?: Prisma.StringFieldUpdateOperationsInput | string
   media_type?: Prisma.EnumMediaTypeFieldUpdateOperationsInput | $Enums.MediaType
   verification_status?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
@@ -677,7 +705,8 @@ export type postsUpdateWithoutLikesInput = {
 export type postsUncheckedUpdateWithoutLikesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   profile_id?: Prisma.StringFieldUpdateOperationsInput | string
-  caption?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  heading?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   media_url?: Prisma.StringFieldUpdateOperationsInput | string
   media_type?: Prisma.EnumMediaTypeFieldUpdateOperationsInput | $Enums.MediaType
   verification_status?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
@@ -689,7 +718,8 @@ export type postsUncheckedUpdateWithoutLikesInput = {
 
 export type postsCreateWithoutCommentsInput = {
   id?: string
-  caption?: string | null
+  heading?: string | null
+  description?: string | null
   media_url: string
   media_type: $Enums.MediaType
   verification_status?: $Enums.VerificationStatus
@@ -703,7 +733,8 @@ export type postsCreateWithoutCommentsInput = {
 export type postsUncheckedCreateWithoutCommentsInput = {
   id?: string
   profile_id: string
-  caption?: string | null
+  heading?: string | null
+  description?: string | null
   media_url: string
   media_type: $Enums.MediaType
   verification_status?: $Enums.VerificationStatus
@@ -731,7 +762,8 @@ export type postsUpdateToOneWithWhereWithoutCommentsInput = {
 
 export type postsUpdateWithoutCommentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  caption?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  heading?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   media_url?: Prisma.StringFieldUpdateOperationsInput | string
   media_type?: Prisma.EnumMediaTypeFieldUpdateOperationsInput | $Enums.MediaType
   verification_status?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
@@ -745,7 +777,8 @@ export type postsUpdateWithoutCommentsInput = {
 export type postsUncheckedUpdateWithoutCommentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   profile_id?: Prisma.StringFieldUpdateOperationsInput | string
-  caption?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  heading?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   media_url?: Prisma.StringFieldUpdateOperationsInput | string
   media_type?: Prisma.EnumMediaTypeFieldUpdateOperationsInput | $Enums.MediaType
   verification_status?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
@@ -757,7 +790,8 @@ export type postsUncheckedUpdateWithoutCommentsInput = {
 
 export type postsCreateManyProfileInput = {
   id?: string
-  caption?: string | null
+  heading?: string | null
+  description?: string | null
   media_url: string
   media_type: $Enums.MediaType
   verification_status?: $Enums.VerificationStatus
@@ -768,7 +802,8 @@ export type postsCreateManyProfileInput = {
 
 export type postsUpdateWithoutProfileInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  caption?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  heading?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   media_url?: Prisma.StringFieldUpdateOperationsInput | string
   media_type?: Prisma.EnumMediaTypeFieldUpdateOperationsInput | $Enums.MediaType
   verification_status?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
@@ -781,7 +816,8 @@ export type postsUpdateWithoutProfileInput = {
 
 export type postsUncheckedUpdateWithoutProfileInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  caption?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  heading?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   media_url?: Prisma.StringFieldUpdateOperationsInput | string
   media_type?: Prisma.EnumMediaTypeFieldUpdateOperationsInput | $Enums.MediaType
   verification_status?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
@@ -794,7 +830,8 @@ export type postsUncheckedUpdateWithoutProfileInput = {
 
 export type postsUncheckedUpdateManyWithoutProfileInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  caption?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  heading?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   media_url?: Prisma.StringFieldUpdateOperationsInput | string
   media_type?: Prisma.EnumMediaTypeFieldUpdateOperationsInput | $Enums.MediaType
   verification_status?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
@@ -846,7 +883,8 @@ export type PostsCountOutputTypeCountCommentsArgs<ExtArgs extends runtime.Types.
 export type postsSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   profile_id?: boolean
-  caption?: boolean
+  heading?: boolean
+  description?: boolean
   media_url?: boolean
   media_type?: boolean
   verification_status?: boolean
@@ -862,7 +900,8 @@ export type postsSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
 export type postsSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   profile_id?: boolean
-  caption?: boolean
+  heading?: boolean
+  description?: boolean
   media_url?: boolean
   media_type?: boolean
   verification_status?: boolean
@@ -875,7 +914,8 @@ export type postsSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
 export type postsSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   profile_id?: boolean
-  caption?: boolean
+  heading?: boolean
+  description?: boolean
   media_url?: boolean
   media_type?: boolean
   verification_status?: boolean
@@ -888,7 +928,8 @@ export type postsSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
 export type postsSelectScalar = {
   id?: boolean
   profile_id?: boolean
-  caption?: boolean
+  heading?: boolean
+  description?: boolean
   media_url?: boolean
   media_type?: boolean
   verification_status?: boolean
@@ -897,7 +938,7 @@ export type postsSelectScalar = {
   created_at?: boolean
 }
 
-export type postsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "profile_id" | "caption" | "media_url" | "media_type" | "verification_status" | "likes_count" | "comments_count" | "created_at", ExtArgs["result"]["posts"]>
+export type postsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "profile_id" | "heading" | "description" | "media_url" | "media_type" | "verification_status" | "likes_count" | "comments_count" | "created_at", ExtArgs["result"]["posts"]>
 export type postsInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   profile?: boolean | Prisma.profilesDefaultArgs<ExtArgs>
   likes?: boolean | Prisma.posts$likesArgs<ExtArgs>
@@ -921,7 +962,8 @@ export type $postsPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     profile_id: string
-    caption: string | null
+    heading: string | null
+    description: string | null
     media_url: string
     media_type: $Enums.MediaType
     verification_status: $Enums.VerificationStatus
@@ -1356,7 +1398,8 @@ export interface Prisma__postsClient<T, Null = never, ExtArgs extends runtime.Ty
 export interface postsFieldRefs {
   readonly id: Prisma.FieldRef<"posts", 'String'>
   readonly profile_id: Prisma.FieldRef<"posts", 'String'>
-  readonly caption: Prisma.FieldRef<"posts", 'String'>
+  readonly heading: Prisma.FieldRef<"posts", 'String'>
+  readonly description: Prisma.FieldRef<"posts", 'String'>
   readonly media_url: Prisma.FieldRef<"posts", 'String'>
   readonly media_type: Prisma.FieldRef<"posts", 'MediaType'>
   readonly verification_status: Prisma.FieldRef<"posts", 'VerificationStatus'>
