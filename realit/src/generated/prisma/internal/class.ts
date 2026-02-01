@@ -20,7 +20,7 @@ const config: runtime.GetPrismaClientConfig = {
   "clientVersion": "7.1.0",
   "engineVersion": "ab635e6b9d606fa5c8fb8b1a7f909c3c3c1c98ba",
   "activeProvider": "postgresql",
-  "inlineSchema": "generator client {\n  provider     = \"prisma-client\"\n  output       = \"../src/generated/prisma\"\n  moduleFormat = \"cjs\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n\nmodel users {\n  id            String @id @default(uuid())\n  email         String @db.Citext\n  username      String @db.Citext\n  display_name  String\n  password_hash String\n\n  is_email_verified Boolean @default(false)\n  is_active         Boolean @default(true)\n\n  created_at DateTime @default(now())\n  updated_at DateTime @default(now())\n\n  refresh_tokens refresh_tokens[]\n\n  @@unique([email])\n  @@unique([username])\n}\n\nmodel refresh_tokens {\n  id         String   @id @default(uuid())\n  user_id    String\n  token_hash String\n  is_revoked Boolean  @default(false)\n  expires_at DateTime\n  created_at DateTime @default(now())\n\n  user users @relation(fields: [user_id], references: [id], onDelete: Cascade)\n}\n",
+  "inlineSchema": "generator client {\n  provider     = \"prisma-client\"\n  output       = \"../src/generated/prisma\"\n  moduleFormat = \"cjs\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n\nmodel users {\n  id            String @id @default(uuid())\n  email         String @db.Citext\n  username      String @db.Citext\n  password_hash String\n\n  is_email_verified Boolean @default(false)\n  is_active         Boolean @default(true)\n\n  created_at DateTime @default(now())\n  updated_at DateTime @default(now())\n\n  refresh_tokens refresh_tokens[]\n  profile        profiles?\n\n  @@unique([email])\n  @@unique([username])\n}\n\nmodel refresh_tokens {\n  id         String   @id @default(uuid())\n  user_id    String\n  token_hash String\n  is_revoked Boolean  @default(false)\n  expires_at DateTime\n  created_at DateTime @default(now())\n\n  user users @relation(fields: [user_id], references: [id], onDelete: Cascade)\n}\n\nenum MediaType {\n  image\n  video\n}\n\nenum VerificationStatus {\n  verified\n  ai\n  unverified\n}\n\nmodel profiles {\n  id      String @id @default(uuid())\n  user_id String @unique\n  user    users  @relation(fields: [user_id], references: [id], onDelete: Cascade)\n\n  username     String  @unique @db.Citext\n  display_name String?\n  bio          String?\n  avatar_url   String?\n  website      String?\n\n  is_private Boolean @default(false)\n\n  followers_count Int @default(0)\n  following_count Int @default(0)\n  posts_count     Int @default(0)\n\n  created_at DateTime @default(now())\n  updated_at DateTime @default(now())\n\n  followers follows[]  @relation(\"following\")\n  following follows[]  @relation(\"follower\")\n  posts     posts[]\n  likes     likes[]\n  comments  comments[]\n}\n\nmodel follows {\n  follower_id String\n  follower    profiles @relation(\"follower\", fields: [follower_id], references: [id], onDelete: Cascade)\n\n  following_id String\n  following    profiles @relation(\"following\", fields: [following_id], references: [id], onDelete: Cascade)\n\n  created_at DateTime @default(now())\n\n  @@id([follower_id, following_id])\n}\n\nmodel posts {\n  id         String   @id @default(uuid())\n  profile_id String\n  profile    profiles @relation(fields: [profile_id], references: [id], onDelete: Cascade)\n\n  heading             String?\n  description         String?\n  media_url           String\n  media_type          MediaType\n  verification_status VerificationStatus @default(unverified)\n\n  likes_count    Int @default(0)\n  comments_count Int @default(0)\n\n  created_at DateTime @default(now())\n\n  likes    likes[]\n  comments comments[]\n}\n\nmodel likes {\n  profile_id String\n  profile    profiles @relation(fields: [profile_id], references: [id], onDelete: Cascade)\n\n  post_id String\n  post    posts  @relation(fields: [post_id], references: [id], onDelete: Cascade)\n\n  created_at DateTime @default(now())\n\n  @@id([profile_id, post_id])\n}\n\nmodel comments {\n  id      String @id @default(uuid())\n  post_id String\n  post    posts  @relation(fields: [post_id], references: [id], onDelete: Cascade)\n\n  profile_id String\n  profile    profiles @relation(fields: [profile_id], references: [id], onDelete: Cascade)\n\n  content String\n\n  created_at DateTime @default(now())\n}\n",
   "runtimeDataModel": {
     "models": {},
     "enums": {},
@@ -28,7 +28,7 @@ const config: runtime.GetPrismaClientConfig = {
   }
 }
 
-config.runtimeDataModel = JSON.parse("{\"models\":{\"users\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"username\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"display_name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"password_hash\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"is_email_verified\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"is_active\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"refresh_tokens\",\"kind\":\"object\",\"type\":\"refresh_tokens\",\"relationName\":\"refresh_tokensTousers\"}],\"dbName\":null},\"refresh_tokens\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"token_hash\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"is_revoked\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"expires_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"users\",\"relationName\":\"refresh_tokensTousers\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
+config.runtimeDataModel = JSON.parse("{\"models\":{\"users\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"username\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"password_hash\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"is_email_verified\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"is_active\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"refresh_tokens\",\"kind\":\"object\",\"type\":\"refresh_tokens\",\"relationName\":\"refresh_tokensTousers\"},{\"name\":\"profile\",\"kind\":\"object\",\"type\":\"profiles\",\"relationName\":\"profilesTousers\"}],\"dbName\":null},\"refresh_tokens\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"token_hash\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"is_revoked\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"expires_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"users\",\"relationName\":\"refresh_tokensTousers\"}],\"dbName\":null},\"profiles\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"users\",\"relationName\":\"profilesTousers\"},{\"name\":\"username\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"display_name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"bio\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"avatar_url\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"website\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"is_private\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"followers_count\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"following_count\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"posts_count\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"followers\",\"kind\":\"object\",\"type\":\"follows\",\"relationName\":\"following\"},{\"name\":\"following\",\"kind\":\"object\",\"type\":\"follows\",\"relationName\":\"follower\"},{\"name\":\"posts\",\"kind\":\"object\",\"type\":\"posts\",\"relationName\":\"postsToprofiles\"},{\"name\":\"likes\",\"kind\":\"object\",\"type\":\"likes\",\"relationName\":\"likesToprofiles\"},{\"name\":\"comments\",\"kind\":\"object\",\"type\":\"comments\",\"relationName\":\"commentsToprofiles\"}],\"dbName\":null},\"follows\":{\"fields\":[{\"name\":\"follower_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"follower\",\"kind\":\"object\",\"type\":\"profiles\",\"relationName\":\"follower\"},{\"name\":\"following_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"following\",\"kind\":\"object\",\"type\":\"profiles\",\"relationName\":\"following\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"posts\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"profile_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"profile\",\"kind\":\"object\",\"type\":\"profiles\",\"relationName\":\"postsToprofiles\"},{\"name\":\"heading\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"description\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"media_url\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"media_type\",\"kind\":\"enum\",\"type\":\"MediaType\"},{\"name\":\"verification_status\",\"kind\":\"enum\",\"type\":\"VerificationStatus\"},{\"name\":\"likes_count\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"comments_count\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"likes\",\"kind\":\"object\",\"type\":\"likes\",\"relationName\":\"likesToposts\"},{\"name\":\"comments\",\"kind\":\"object\",\"type\":\"comments\",\"relationName\":\"commentsToposts\"}],\"dbName\":null},\"likes\":{\"fields\":[{\"name\":\"profile_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"profile\",\"kind\":\"object\",\"type\":\"profiles\",\"relationName\":\"likesToprofiles\"},{\"name\":\"post_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"post\",\"kind\":\"object\",\"type\":\"posts\",\"relationName\":\"likesToposts\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"comments\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"post_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"post\",\"kind\":\"object\",\"type\":\"posts\",\"relationName\":\"commentsToposts\"},{\"name\":\"profile_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"profile\",\"kind\":\"object\",\"type\":\"profiles\",\"relationName\":\"commentsToprofiles\"},{\"name\":\"content\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
 
 async function decodeBase64AsWasm(wasmBase64: string): Promise<WebAssembly.Module> {
   const { Buffer } = await import('node:buffer')
@@ -193,6 +193,56 @@ export interface PrismaClient<
     * ```
     */
   get refresh_tokens(): Prisma.refresh_tokensDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
+   * `prisma.profiles`: Exposes CRUD operations for the **profiles** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Profiles
+    * const profiles = await prisma.profiles.findMany()
+    * ```
+    */
+  get profiles(): Prisma.profilesDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
+   * `prisma.follows`: Exposes CRUD operations for the **follows** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Follows
+    * const follows = await prisma.follows.findMany()
+    * ```
+    */
+  get follows(): Prisma.followsDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
+   * `prisma.posts`: Exposes CRUD operations for the **posts** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Posts
+    * const posts = await prisma.posts.findMany()
+    * ```
+    */
+  get posts(): Prisma.postsDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
+   * `prisma.likes`: Exposes CRUD operations for the **likes** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Likes
+    * const likes = await prisma.likes.findMany()
+    * ```
+    */
+  get likes(): Prisma.likesDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
+   * `prisma.comments`: Exposes CRUD operations for the **comments** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Comments
+    * const comments = await prisma.comments.findMany()
+    * ```
+    */
+  get comments(): Prisma.commentsDelegate<ExtArgs, { omit: OmitOpts }>;
 }
 
 export function getPrismaClientClass(): PrismaClientConstructor {

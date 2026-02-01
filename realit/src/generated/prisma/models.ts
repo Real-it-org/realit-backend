@@ -10,4 +10,9 @@
  */
 export type * from './models/users.js'
 export type * from './models/refresh_tokens.js'
+export type * from './models/profiles.js'
+export type * from './models/follows.js'
+export type * from './models/posts.js'
+export type * from './models/likes.js'
+export type * from './models/comments.js'
 export type * from './commonInputTypes.js'

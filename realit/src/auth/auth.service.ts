@@ -34,13 +34,24 @@ export class AuthService {
 
     const password_hash = await bcrypt.hash(dto.password, 12);
 
-    const user = await this.prisma.users.create({
-      data: {
-        email: dto.email,
-        username: dto.username,
-        display_name: dto.display_name,
-        password_hash,
-      },
+    const user = await this.prisma.$transaction(async (tx) => {
+      const newUser = await tx.users.create({
+        data: {
+          email: dto.email,
+          username: dto.username,
+          password_hash,
+        },
+      });
+
+      await tx.profiles.create({
+        data: {
+          user_id: newUser.id,
+          username: dto.username,
+          display_name: dto.display_name,
+        },
+      });
+
+      return newUser;
     });
 
     return this.generateTokensAndSave(user.id, user.email);

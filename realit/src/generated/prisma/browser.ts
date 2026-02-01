@@ -27,3 +27,28 @@ export type users = Prisma.usersModel
  * 
  */
 export type refresh_tokens = Prisma.refresh_tokensModel
+/**
+ * Model profiles
+ * 
+ */
+export type profiles = Prisma.profilesModel
+/**
+ * Model follows
+ * 
+ */
+export type follows = Prisma.followsModel
+/**
+ * Model posts
+ * 
+ */
+export type posts = Prisma.postsModel
+/**
+ * Model likes
+ * 
+ */
+export type likes = Prisma.likesModel
+/**
+ * Model comments
+ * 
+ */
+export type comments = Prisma.commentsModel
