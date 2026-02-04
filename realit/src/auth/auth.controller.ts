@@ -20,20 +20,24 @@ import { RtGuard } from './guards/rt.guard';
 import { GetCurrentUser } from './decorators/get-current-user.decorator';
 
 // import { Public } from './decorators/public.decorator';
-import { Public } from 'src/auth/decorators/public.decorator';
+import { Public } from './decorators/public.decorator';
 
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) { }
+  constructor(private readonly authService: AuthService) {}
 
   @Public()
   @ApiOperation({ summary: 'Register a new user' })
   @ApiResponse({
     status: HttpStatus.CREATED,
-    description: 'User successfully registered. Returns access and refresh tokens.',
+    description:
+      'User successfully registered. Returns access and refresh tokens.',
   })
-  @ApiResponse({ status: HttpStatus.CONFLICT, description: 'Email or Username already exists' })
+  @ApiResponse({
+    status: HttpStatus.CONFLICT,
+    description: 'Email or Username already exists',
+  })
   @Post('signup')
   @HttpCode(HttpStatus.CREATED)
   signup(@Body() dto: SignupDto): Promise<Tokens> {
@@ -44,9 +48,13 @@ export class AuthController {
   @ApiOperation({ summary: 'Login user' })
   @ApiResponse({
     status: HttpStatus.OK,
-    description: 'User successfully logged in. Returns access and refresh tokens.',
+    description:
+      'User successfully logged in. Returns access and refresh tokens.',
   })
-  @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Invalid credentials' })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'Invalid credentials',
+  })
   @Post('login')
   @HttpCode(HttpStatus.OK)
   login(@Body() dto: LoginDto): Promise<Tokens> {
@@ -54,11 +62,17 @@ export class AuthController {
   }
 
   @ApiOperation({ summary: 'Logout user' })
-  @ApiResponse({ status: HttpStatus.OK, description: 'User successfully logged out.' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'User successfully logged out.',
+  })
   @ApiBearerAuth()
   @Post('logout')
   @HttpCode(HttpStatus.OK)
-  logout(@GetCurrentUser('sub') userId: string, @GetCurrentUser('rt_id') rtId: string) {
+  logout(
+    @GetCurrentUser('sub') userId: string,
+    @GetCurrentUser('rt_id') rtId: string,
+  ) {
     return this.authService.logout(userId, rtId);
   }
 
@@ -66,7 +80,8 @@ export class AuthController {
   @ApiOperation({ summary: 'Refresh access tokens' })
   @ApiResponse({
     status: HttpStatus.OK,
-    description: 'Tokens successfully refreshed. Returns new access and refresh tokens.',
+    description:
+      'Tokens successfully refreshed. Returns new access and refresh tokens.',
   })
   @ApiBearerAuth()
   @UseGuards(RtGuard)

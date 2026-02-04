@@ -65,7 +65,7 @@ describe('AuthService', () => {
 
       expect(result).toEqual({
         access_token: 'signed-token',
-        refresh_token: 'signed-token'
+        refresh_token: 'signed-token',
       });
       expect(mockPrisma.users.create).toHaveBeenCalled();
       expect(mockPrisma.refresh_tokens.create).toHaveBeenCalled();
@@ -103,7 +103,7 @@ describe('AuthService', () => {
 
       expect(result).toEqual({
         access_token: 'signed-token',
-        refresh_token: 'signed-token'
+        refresh_token: 'signed-token',
       });
     });
 

@@ -19,7 +19,7 @@ export class AuthService {
     private prisma: PrismaService,
     private jwt: JwtService,
     private config: ConfigService,
-  ) { }
+  ) {}
 
   async signup(dto: SignupDto): Promise<Tokens> {
     const exists = await this.prisma.users.findFirst({
@@ -60,10 +60,7 @@ export class AuthService {
   async login(dto: LoginDto): Promise<Tokens> {
     const user = await this.prisma.users.findFirst({
       where: {
-        OR: [
-          { email: dto.identifier },
-          { username: dto.identifier },
-        ],
+        OR: [{ email: dto.identifier }, { username: dto.identifier }],
         is_active: true,
       },
     });
@@ -72,10 +69,7 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    const valid = await bcrypt.compare(
-      dto.password,
-      user.password_hash,
-    );
+    const valid = await bcrypt.compare(dto.password, user.password_hash);
 
     if (!valid) {
       throw new UnauthorizedException('Invalid credentials');
@@ -86,16 +80,19 @@ export class AuthService {
 
   async logout(userId: string, rtId: string) {
     if (rtId) {
-      await this.prisma.refresh_tokens.update({
-        where: { id: rtId },
-        data: { is_revoked: true },
-      }).catch(() => { });
+      await this.prisma.refresh_tokens
+        .update({
+          where: { id: rtId },
+          data: { is_revoked: true },
+        })
+        .catch(() => {});
     }
   }
 
   async refreshTokens(userId: string, rt: string): Promise<Tokens> {
-    const decoded = this.jwt.decode(rt) as any;
-    if (!decoded || !decoded.rt_id) throw new ForbiddenException('Invalid Token Structure');
+    const decoded = this.jwt.decode(rt);
+    if (!decoded || !decoded.rt_id)
+      throw new ForbiddenException('Invalid Token Structure');
 
     const rtId = decoded.rt_id;
 
@@ -113,7 +110,7 @@ export class AuthService {
     // We can just delete it to keep table clean, or mark revoked for audit.
     // Let's delete for simplicity and space.
     await this.prisma.refresh_tokens.delete({
-      where: { id: rtId }
+      where: { id: rtId },
     });
 
     const user = await this.prisma.users.findUnique({ where: { id: userId } });
@@ -122,7 +119,10 @@ export class AuthService {
     return this.generateTokensAndSave(user.id, user.email);
   }
 
-  private async generateTokensAndSave(userId: string, email: string): Promise<Tokens> {
+  private async generateTokensAndSave(
+    userId: string,
+    email: string,
+  ): Promise<Tokens> {
     const rtId = crypto.randomUUID();
 
     const [at, rt] = await Promise.all([
@@ -144,7 +144,7 @@ export class AuthService {
         user_id: userId,
         token_hash: hash,
         expires_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
-      }
+      },
     });
 
     return {
@@ -153,4 +153,3 @@ export class AuthService {
     };
   }
 }
-

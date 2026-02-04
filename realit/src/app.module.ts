@@ -8,11 +8,18 @@ import { APP_GUARD } from '@nestjs/core';
 import { AtGuard } from './auth/guards/at.guard';
 
 import { ProfileModule } from './profile/profile.module';
+import { PostsModule } from './posts/posts.module';
 
 @Module({
-  imports: [ConfigModule.forRoot({
-    isGlobal: true,
-  }), PrismaModule, AuthModule, ProfileModule],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+    PrismaModule,
+    AuthModule,
+    ProfileModule,
+    PostsModule,
+  ],
   controllers: [AppController],
   providers: [
     AppService,
@@ -22,4 +29,4 @@ import { ProfileModule } from './profile/profile.module';
     },
   ],
 })
-export class AppModule { }
+export class AppModule {}
