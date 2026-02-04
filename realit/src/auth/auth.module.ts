@@ -7,11 +7,8 @@ import { AtStrategy } from './strategies/at.strategy';
 import { RtStrategy } from './strategies/rt.strategy';
 
 @Module({
-  imports: [
-    PassportModule.register({}),
-    JwtModule.register({}),
-  ],
+  imports: [PassportModule.register({}), JwtModule.register({})],
   controllers: [AuthController],
   providers: [AuthService, AtStrategy, RtStrategy],
 })
-export class AuthModule { }
+export class AuthModule {}
