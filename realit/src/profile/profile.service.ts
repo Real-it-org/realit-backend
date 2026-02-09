@@ -4,6 +4,7 @@ import { StorageService } from '../storage/storage.service';
 import { ProfileResponseDto } from './dto/profile-response.dto';
 import { PostResponseDto } from './dto/post-response.dto';
 import { PaginationQueryDto } from './dto/pagination-query.dto';
+import { UserSummaryDto } from './dto/user-summary.dto';
 
 @Injectable()
 export class ProfileService {
@@ -77,5 +78,39 @@ export class ProfileService {
     );
 
     return postsWithSignedMedia;
+  }
+
+  async searchProfiles(
+    query: string,
+    pagination: PaginationQueryDto,
+  ): Promise<UserSummaryDto[]> {
+    const { page = 1, limit = 10 } = pagination;
+    const skip = (page - 1) * limit;
+
+    const profiles = await this.prisma.profiles.findMany({
+      where: {
+        OR: [
+          { username: { contains: query, mode: 'insensitive' } },
+          { display_name: { contains: query, mode: 'insensitive' } },
+        ],
+      },
+      skip,
+      take: limit,
+      select: {
+        id: true,
+        username: true,
+        display_name: true,
+        avatar_url: true,
+        is_private: true,
+      },
+    });
+
+    return profiles.map((p) => ({
+      id: p.id,
+      username: p.username,
+      display_name: p.display_name,
+      avatar_url: p.avatar_url,
+      is_private: p.is_private,
+    }));
   }
 }

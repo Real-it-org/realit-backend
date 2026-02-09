@@ -8,13 +8,14 @@ import {
 import { GetCurrentUser } from '../auth/decorators/get-current-user.decorator';
 import { ProfileResponseDto } from './dto/profile-response.dto';
 import { PostResponseDto } from './dto/post-response.dto';
+import { UserSummaryDto } from './dto/user-summary.dto';
 import { PaginationQueryDto } from './dto/pagination-query.dto';
 import { ProfileService } from './profile.service';
 
 @ApiTags('Profile')
 @Controller('profile')
 export class ProfileController {
-  constructor(private readonly profileService: ProfileService) {}
+  constructor(private readonly profileService: ProfileService) { }
 
   @Get()
   @ApiBearerAuth()
@@ -43,5 +44,23 @@ export class ProfileController {
     @Query() pagination: PaginationQueryDto,
   ): Promise<PostResponseDto[]> {
     return this.profileService.getUserPosts(userId, pagination);
+  }
+
+  @Get('search')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Search for profiles by username or display name' })
+  @ApiResponse({
+    status: 200,
+    description: 'Return a paginated list of matching profiles',
+    type: [UserSummaryDto],
+  })
+  async searchProfiles(
+    @Query('query') query: string,
+    @Query() pagination: PaginationQueryDto,
+  ): Promise<UserSummaryDto[]> {
+    if (!query) {
+      return [];
+    }
+    return this.profileService.searchProfiles(query, pagination);
   }
 }
