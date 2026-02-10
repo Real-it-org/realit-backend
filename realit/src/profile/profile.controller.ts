@@ -64,62 +64,61 @@ export class ProfileController {
     }
     return this.profileService.searchProfiles(query, pagination);
   }
-
+  
   @Get(':id')
   @ApiBearerAuth()
-  @ApiOperation({ summary: 'Get a user profile by ID (public view)' })
+  @ApiOperation({ summary: 'Get public profile by ID (or own profile)' })
   @ApiResponse({
     status: 200,
     description: 'Return the profile details',
     type: PublicProfileDto,
   })
   async getPublicProfile(
+
+    @Param('id') targetProfileId: string,
     @GetCurrentUser('sub') currentUserId: string,
-    @Param('id') id: string,
   ): Promise<PublicProfileDto> {
-    return this.profileService.getPublicProfile(id, currentUserId);
+    return this.profileService.getPublicProfile(targetProfileId, currentUserId);
+
   }
 
   @Post(':id/follow')
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Follow a user' })
-  @ApiResponse({
-    status: 201,
-    description: 'Successfully followed the user',
-  })
+
+  @ApiResponse({ status: 201, description: 'User followed successfully' })
   async followUser(
+    @Param('id') targetProfileId: string,
     @GetCurrentUser('sub') currentUserId: string,
-    @Param('id') id: string,
   ): Promise<void> {
-    return this.profileService.followUser(currentUserId, id);
+    return this.profileService.followUser(currentUserId, targetProfileId);
   }
 
   @Delete(':id/follow')
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Unfollow a user' })
-  @ApiResponse({
-    status: 200,
-    description: 'Successfully unfollowed the user',
-  })
+
+  @ApiResponse({ status: 200, description: 'User unfollowed successfully' })
   async unfollowUser(
+    @Param('id') targetProfileId: string,
     @GetCurrentUser('sub') currentUserId: string,
-    @Param('id') id: string,
   ): Promise<void> {
-    return this.profileService.unfollowUser(currentUserId, id);
+    return this.profileService.unfollowUser(currentUserId, targetProfileId);
   }
 
   @Get(':id/posts')
   @ApiBearerAuth()
-  @ApiOperation({ summary: 'Get posts for a specific profile' })
+
+  @ApiOperation({ summary: 'Get posts for a specific profile (public)' })
   @ApiResponse({
     status: 200,
-    description: 'Return a paginated list of posts',
+    description: 'Return a paginated list of posts for the specified profile',
     type: [PostResponseDto],
   })
-  async getProfilePosts(
-    @Param('id') id: string,
+  async getPublicUserPosts(
+    @Param('id') profileId: string,
     @Query() pagination: PaginationQueryDto,
   ): Promise<PostResponseDto[]> {
-    return this.profileService.getUserPostsByProfileId(id, pagination);
+    return this.profileService.getUserPostsByProfileId(profileId, pagination);
   }
 }
