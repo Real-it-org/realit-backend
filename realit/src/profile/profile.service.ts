@@ -81,6 +81,43 @@ export class ProfileService {
     return postsWithSignedMedia;
   }
 
+  async getUserPostsByProfileId(
+    profileId: string,
+    pagination: PaginationQueryDto,
+  ): Promise<PostResponseDto[]> {
+    const { page = 1, limit = 10 } = pagination;
+    const skip = (page - 1) * limit;
+
+    const posts = await this.prisma.posts.findMany({
+      where: { profile_id: profileId },
+      orderBy: { created_at: 'desc' },
+      skip,
+      take: limit,
+      include: { media: { orderBy: { position: 'asc' } } },
+    });
+
+    const postsWithSignedMedia = await Promise.all(
+      posts.map(async (post) => ({
+        id: post.id,
+        heading: post.heading || '',
+        description: post.description || '',
+        media: await Promise.all(
+          post.media.map(async (m) => ({
+            media_url: await this.storage.getPresignedUrlForRead(m.object_key),
+            media_type: m.media_type,
+            position: m.position,
+          })),
+        ),
+        verification_status: post.verification_status,
+        likes_count: post.likes_count,
+        comments_count: post.comments_count,
+        created_at: post.created_at,
+      })),
+    );
+
+    return postsWithSignedMedia;
+  }
+
   async searchProfiles(
     query: string,
     pagination: PaginationQueryDto,
@@ -245,6 +282,7 @@ export class ProfileService {
       throw error;
     }
   }
+
 
   async getUserPostsByProfileId(
     profileId: string,

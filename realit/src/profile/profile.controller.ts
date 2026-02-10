@@ -64,6 +64,7 @@ export class ProfileController {
     }
     return this.profileService.searchProfiles(query, pagination);
   }
+  
   @Get(':id')
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Get public profile by ID (or own profile)' })
@@ -73,15 +74,18 @@ export class ProfileController {
     type: PublicProfileDto,
   })
   async getPublicProfile(
+
     @Param('id') targetProfileId: string,
     @GetCurrentUser('sub') currentUserId: string,
   ): Promise<PublicProfileDto> {
     return this.profileService.getPublicProfile(targetProfileId, currentUserId);
+
   }
 
   @Post(':id/follow')
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Follow a user' })
+
   @ApiResponse({ status: 201, description: 'User followed successfully' })
   async followUser(
     @Param('id') targetProfileId: string,
@@ -93,6 +97,7 @@ export class ProfileController {
   @Delete(':id/follow')
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Unfollow a user' })
+
   @ApiResponse({ status: 200, description: 'User unfollowed successfully' })
   async unfollowUser(
     @Param('id') targetProfileId: string,
@@ -103,6 +108,7 @@ export class ProfileController {
 
   @Get(':id/posts')
   @ApiBearerAuth()
+
   @ApiOperation({ summary: 'Get posts for a specific profile (public)' })
   @ApiResponse({
     status: 200,
