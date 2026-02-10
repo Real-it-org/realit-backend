@@ -1,4 +1,4 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Post, Delete, Query, Param } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiOperation,
@@ -9,6 +9,7 @@ import { GetCurrentUser } from '../auth/decorators/get-current-user.decorator';
 import { ProfileResponseDto } from './dto/profile-response.dto';
 import { PostResponseDto } from './dto/post-response.dto';
 import { UserSummaryDto } from './dto/user-summary.dto';
+import { PublicProfileDto } from './dto/public-profile.dto';
 import { PaginationQueryDto } from './dto/pagination-query.dto';
 import { ProfileService } from './profile.service';
 
@@ -62,5 +63,63 @@ export class ProfileController {
       return [];
     }
     return this.profileService.searchProfiles(query, pagination);
+  }
+
+  @Get(':id')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Get a user profile by ID (public view)' })
+  @ApiResponse({
+    status: 200,
+    description: 'Return the profile details',
+    type: PublicProfileDto,
+  })
+  async getPublicProfile(
+    @GetCurrentUser('sub') currentUserId: string,
+    @Param('id') id: string,
+  ): Promise<PublicProfileDto> {
+    return this.profileService.getPublicProfile(id, currentUserId);
+  }
+
+  @Post(':id/follow')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Follow a user' })
+  @ApiResponse({
+    status: 201,
+    description: 'Successfully followed the user',
+  })
+  async followUser(
+    @GetCurrentUser('sub') currentUserId: string,
+    @Param('id') id: string,
+  ): Promise<void> {
+    return this.profileService.followUser(currentUserId, id);
+  }
+
+  @Delete(':id/follow')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Unfollow a user' })
+  @ApiResponse({
+    status: 200,
+    description: 'Successfully unfollowed the user',
+  })
+  async unfollowUser(
+    @GetCurrentUser('sub') currentUserId: string,
+    @Param('id') id: string,
+  ): Promise<void> {
+    return this.profileService.unfollowUser(currentUserId, id);
+  }
+
+  @Get(':id/posts')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Get posts for a specific profile' })
+  @ApiResponse({
+    status: 200,
+    description: 'Return a paginated list of posts',
+    type: [PostResponseDto],
+  })
+  async getProfilePosts(
+    @Param('id') id: string,
+    @Query() pagination: PaginationQueryDto,
+  ): Promise<PostResponseDto[]> {
+    return this.profileService.getUserPostsByProfileId(id, pagination);
   }
 }
