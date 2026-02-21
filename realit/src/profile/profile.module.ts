@@ -3,9 +3,10 @@ import { ProfileController } from './profile.controller';
 import { ProfileService } from './profile.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { StorageModule } from '../storage/storage.module';
+import { NotificationsModule } from '../notifications/notifications.module';
 
 @Module({
-  imports: [StorageModule],
+  imports: [StorageModule, NotificationsModule],
   controllers: [ProfileController],
   providers: [ProfileService, PrismaService],
 })

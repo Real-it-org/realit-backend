@@ -22,6 +22,7 @@ model users {
 
   refresh_tokens refresh_tokens[]
   profile        profiles?
+  push_tokens    push_tokens[]
 
   @@unique([email])
   @@unique([username])
@@ -36,6 +37,19 @@ model refresh_tokens {
   created_at DateTime @default(now())
 
   user users @relation(fields: [user_id], references: [id], onDelete: Cascade)
+}
+
+model push_tokens {
+  id      String @id @default(uuid())
+  user_id String
+  user    users  @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  token    String @unique // FCM / APNs device token
+  platform String // "ios" | "android"
+
+  created_at DateTime @default(now())
+
+  @@index([user_id])
 }
 
 enum MediaType {
@@ -57,6 +71,20 @@ enum MediaStatus {
   failed
 }
 
+enum NotificationType {
+  follow // public follow completed
+  follow_request // request to follow a private profile
+  follow_accepted // private profile accepted your request
+  like
+  comment
+}
+
+enum FollowRequestStatus {
+  pending
+  accepted
+  rejected
+}
+
 model profiles {
   id      String @id @default(uuid())
   user_id String @unique
@@ -70,9 +98,10 @@ model profiles {
 
   is_private Boolean @default(false)
 
-  followers_count Int @default(0)
-  following_count Int @default(0)
-  posts_count     Int @default(0)
+  followers_count            Int @default(0)
+  following_count            Int @default(0)
+  posts_count                Int @default(0)
+  unread_notifications_count Int @default(0)
 
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
@@ -82,6 +111,11 @@ model profiles {
   posts     posts[]
   likes     likes[]
   comments  comments[]
+
+  received_notifications   notifications[]   @relation("received_notifications")
+  sent_notifications       notifications[]   @relation("sent_notifications")
+  received_follow_requests follow_requests[] @relation("received_requests")
+  sent_follow_requests     follow_requests[] @relation("sent_requests")
 }
 
 model follows {
@@ -94,6 +128,51 @@ model follows {
   created_at DateTime @default(now())
 
   @@id([follower_id, following_id])
+}
+
+model follow_requests {
+  id String @id @default(uuid())
+
+  requester_profile_id String
+  requester            profiles @relation("sent_requests", fields: [requester_profile_id], references: [id], onDelete: Cascade)
+
+  target_profile_id String
+  target            profiles @relation("received_requests", fields: [target_profile_id], references: [id], onDelete: Cascade)
+
+  status FollowRequestStatus @default(pending)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+
+  // No @@unique — row is hard-deleted on reject, allowing re-requests
+  @@index([target_profile_id, status])
+  @@index([requester_profile_id, target_profile_id])
+}
+
+model notifications {
+  id String @id @default(uuid())
+
+  recipient_profile_id String
+  recipient            profiles @relation("received_notifications", fields: [recipient_profile_id], references: [id], onDelete: Cascade)
+
+  actor_profile_id String
+  actor            profiles @relation("sent_notifications", fields: [actor_profile_id], references: [id], onDelete: Cascade)
+
+  type NotificationType
+
+  // Post context — Cascade: notification deleted when post is deleted
+  post_id String?
+  post    posts?  @relation(fields: [post_id], references: [id], onDelete: Cascade)
+
+  // Comment context — Cascade: notification deleted when comment is deleted
+  comment_id String?
+  comment    comments? @relation(fields: [comment_id], references: [id], onDelete: Cascade)
+
+  is_read    Boolean  @default(false)
+  created_at DateTime @default(now())
+
+  @@index([recipient_profile_id, is_read])
+  @@index([recipient_profile_id, created_at(sort: Desc)])
 }
 
 model posts {
@@ -111,8 +190,9 @@ model posts {
 
   created_at DateTime @default(now())
 
-  likes    likes[]
-  comments comments[]
+  likes         likes[]
+  comments      comments[]
+  notifications notifications[]
 }
 
 model likes {
@@ -138,6 +218,8 @@ model comments {
   content String
 
   created_at DateTime @default(now())
+
+  notifications notifications[]
 }
 
 model post_media {

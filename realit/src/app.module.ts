@@ -9,6 +9,9 @@ import { AtGuard } from './auth/guards/at.guard';
 
 import { ProfileModule } from './profile/profile.module';
 import { PostsModule } from './posts/posts.module';
+import { NotificationsModule } from './notifications/notifications.module';
+import { FollowRequestsModule } from './follow-requests/follow-requests.module';
+import { PushTokensModule } from './push-tokens/push-tokens.module';
 
 @Module({
   imports: [
@@ -19,6 +22,9 @@ import { PostsModule } from './posts/posts.module';
     AuthModule,
     ProfileModule,
     PostsModule,
+    NotificationsModule,
+    FollowRequestsModule,
+    PushTokensModule,
   ],
   controllers: [AppController],
   providers: [
@@ -29,4 +35,4 @@ import { PostsModule } from './posts/posts.module';
     },
   ],
 })
-export class AppModule {}
+export class AppModule { }
