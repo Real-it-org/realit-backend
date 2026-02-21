@@ -1,17 +1,20 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { StorageService } from '../storage/storage.service';
+import { NotificationsService } from '../notifications/notifications.service';
 import { ProfileResponseDto } from './dto/profile-response.dto';
 import { PostResponseDto } from './dto/post-response.dto';
 import { PaginationQueryDto } from './dto/pagination-query.dto';
 import { UserSummaryDto } from './dto/user-summary.dto';
 import { PublicProfileDto } from './dto/public-profile.dto';
+import { NotificationType } from '../generated/prisma/client';
 
 @Injectable()
 export class ProfileService {
   constructor(
     private prisma: PrismaService,
     private storage: StorageService,
+    private notificationsService: NotificationsService,
   ) { }
 
   async getProfile(userId: string): Promise<ProfileResponseDto> {
@@ -33,6 +36,7 @@ export class ProfileService {
       followers_count: profile.followers_count,
       following_count: profile.following_count,
       posts_count: profile.posts_count,
+      unread_notifications_count: profile.unread_notifications_count,
     };
   }
 
@@ -151,6 +155,7 @@ export class ProfileService {
       is_private: p.is_private,
     }));
   }
+
   async getPublicProfile(
     targetProfileId: string,
     currentUserId: string,
@@ -191,10 +196,18 @@ export class ProfileService {
       followers_count: profile.followers_count,
       following_count: profile.following_count,
       posts_count: profile.posts_count,
+      unread_notifications_count: profile.unread_notifications_count,
       is_following: isFollowing,
     };
   }
 
+  /**
+   * Follow a user.
+   * - Public profile  → creates follows record + sends `follow` notification.
+   * - Private profile → creates follow_request record + sends `follow_request` notification.
+   * - Deduplication: existing pending request for the same pair is deleted first (re-follow after unfollow).
+   * - Self-follow guard is handled here AND in NotificationsService.
+   */
   async followUser(currentUserId: string, targetProfileId: string): Promise<void> {
     const follower = await this.prisma.profiles.findUnique({
       where: { user_id: currentUserId },
@@ -221,10 +234,37 @@ export class ProfileService {
       },
     });
 
-    if (existingFollow) {
-      return; // Already following
+    if (existingFollow) return; // Already following
+
+    // ── PRIVATE PROFILE: create a follow request ──────────────────────────────
+    if (following.is_private) {
+      // Deduplication: remove any stale pending request before creating a new one
+      await this.prisma.follow_requests.deleteMany({
+        where: {
+          requester_profile_id: follower.id,
+          target_profile_id: following.id,
+          status: 'pending',
+        },
+      });
+
+      await this.prisma.follow_requests.create({
+        data: {
+          requester_profile_id: follower.id,
+          target_profile_id: following.id,
+          status: 'pending',
+        },
+      });
+
+      await this.notificationsService.createNotification({
+        recipientProfileId: following.id,
+        actorProfileId: follower.id,
+        type: NotificationType.follow_request,
+      });
+
+      return;
     }
 
+    // ── PUBLIC PROFILE: follow directly ───────────────────────────────────────
     await this.prisma.$transaction([
       this.prisma.follows.create({
         data: {
@@ -241,6 +281,12 @@ export class ProfileService {
         data: { following_count: { increment: 1 } },
       }),
     ]);
+
+    await this.notificationsService.createNotification({
+      recipientProfileId: following.id,
+      actorProfileId: follower.id,
+      type: NotificationType.follow,
+    });
   }
 
   async unfollowUser(currentUserId: string, targetProfileId: string): Promise<void> {
@@ -254,6 +300,15 @@ export class ProfileService {
     if (!follower || !following) {
       throw new NotFoundException('Profile not found');
     }
+
+    // Also cancel any outstanding pending follow request
+    await this.prisma.follow_requests.deleteMany({
+      where: {
+        requester_profile_id: follower.id,
+        target_profile_id: following.id,
+        status: 'pending',
+      },
+    });
 
     try {
       await this.prisma.$transaction([
@@ -275,14 +330,10 @@ export class ProfileService {
         }),
       ]);
     } catch (error) {
-      // Handle case where follow record doesn't exist
       if (error.code === 'P2025') {
-        return; // Not following, so nothing to delete
+        return; // Not following, nothing to delete
       }
       throw error;
     }
   }
-
-
-
 }

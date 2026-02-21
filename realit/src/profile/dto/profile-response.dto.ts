@@ -27,4 +27,7 @@ export class ProfileResponseDto {
 
   @ApiProperty()
   posts_count: number;
+
+  @ApiProperty()
+  unread_notifications_count: number;
 }
