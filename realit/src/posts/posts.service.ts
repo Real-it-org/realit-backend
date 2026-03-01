@@ -74,6 +74,7 @@ export class PostsService {
         profile_id: profile.id,
         heading: dto.heading,
         description: dto.description,
+        verification_status: dto.verification_status ?? 'unverified',
         media: {
           create: mediaCreateData.map((m) => ({
             media_url: m.media_url,
@@ -111,11 +112,11 @@ export class PostsService {
       throw new ForbiddenException('You can only confirm media for your own posts');
     }
 
-    // 2. Update status of uploaded assets to 'active'
+    // 2. Update status of all pending media for this post to 'active'
     await this.prisma.post_media.updateMany({
       where: {
         post_id: dto.post_id,
-        id: { in: dto.uploaded_asset_ids }
+        status: MediaStatus.pending,
       },
       data: {
         status: MediaStatus.active
