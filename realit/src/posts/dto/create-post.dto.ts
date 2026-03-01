@@ -1,5 +1,6 @@
 import {
   IsString,
+  IsOptional,
   IsNotEmpty,
   IsArray,
   ValidateNested,
@@ -7,7 +8,7 @@ import {
   IsInt,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-import { MediaType } from '../../generated/prisma/client';
+import { MediaType, VerificationStatus } from '../../generated/prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class PostMediaItemDto {
@@ -59,4 +60,15 @@ export class CreatePostDto {
   @ValidateNested({ each: true })
   @Type(() => PostMediaItemDto)
   media: PostMediaItemDto[];
+
+  @ApiProperty({
+    enum: VerificationStatus,
+    description: 'Verification status of the post',
+    required: false,
+    default: VerificationStatus.unverified,
+    example: 'verified',
+  })
+  @IsOptional()
+  @IsEnum(VerificationStatus)
+  verification_status?: VerificationStatus;
 }

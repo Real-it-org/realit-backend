@@ -12,6 +12,7 @@ import { PostsModule } from './posts/posts.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { FollowRequestsModule } from './follow-requests/follow-requests.module';
 import { PushTokensModule } from './push-tokens/push-tokens.module';
+import { FeedModule } from './feed/feed.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { PushTokensModule } from './push-tokens/push-tokens.module';
     NotificationsModule,
     FollowRequestsModule,
     PushTokensModule,
+    FeedModule,
   ],
   controllers: [AppController],
   providers: [
