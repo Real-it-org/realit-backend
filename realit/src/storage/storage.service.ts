@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { S3Client, PutObjectCommand, GetObjectCommand } from '@aws-sdk/client-s3';
+import { S3Client, PutObjectCommand, GetObjectCommand, DeleteObjectsCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
 @Injectable()
@@ -48,5 +48,22 @@ export class StorageService {
     });
 
     return getSignedUrl(this.s3Client, command, { expiresIn: 3600 });
+  }
+
+  /**
+   * Batch-delete objects from the bucket by their keys.
+   * No-ops if the keys array is empty.
+   */
+  async deleteObjects(keys: string[]): Promise<void> {
+    if (keys.length === 0) return;
+
+    const command = new DeleteObjectsCommand({
+      Bucket: this.bucketName,
+      Delete: {
+        Objects: keys.map((Key) => ({ Key })),
+      },
+    });
+
+    await this.s3Client.send(command);
   }
 }
