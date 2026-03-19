@@ -1,8 +1,9 @@
-import { Controller, Post, Body, Request } from '@nestjs/common';
+import { Controller, Post, Delete, Body, Param, Request } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { CreatePostResponseDto } from './dto/create-post-response.dto';
 import { ConfirmPostMediaDto } from './dto/confirm-post-media.dto';
+import { DeletePostResponseDto } from './dto/delete-post-response.dto';
 import {
   ApiBearerAuth,
   ApiTags,
@@ -10,6 +11,7 @@ import {
   ApiCreatedResponse,
   ApiBody,
   ApiResponse,
+  ApiParam,
 } from '@nestjs/swagger';
 
 @ApiTags('posts')
@@ -40,4 +42,21 @@ export class PostsController {
   async confirm(@Request() req: any, @Body() dto: ConfirmPostMediaDto) {
     return this.postsService.confirmPostMedia(req.user.sub, dto);
   }
+
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Delete a post and all its media' })
+  @ApiParam({ name: 'id', description: 'Post ID (UUID)' })
+  @ApiResponse({
+    status: 200,
+    description: 'Post and all associated media deleted',
+    type: DeletePostResponseDto,
+  })
+  @Delete(':id')
+  async delete(
+    @Request() req: any,
+    @Param('id') id: string,
+  ): Promise<DeletePostResponseDto> {
+    return this.postsService.deletePost(req.user.sub, id);
+  }
 }
+

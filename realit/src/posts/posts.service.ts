@@ -125,4 +125,49 @@ export class PostsService {
 
     return { message: 'Media confirmed' };
   }
+
+  async deletePost(userId: string, postId: string) {
+    // 1. Fetch the post with its media and profile for ownership check
+    const post = await this.prisma.posts.findUnique({
+      where: { id: postId },
+      include: {
+        media: true,
+        profile: true,
+      },
+    });
+
+    if (!post) {
+      throw new NotFoundException('Post not found');
+    }
+
+    if (post.profile.user_id !== userId) {
+      throw new ForbiddenException('You can only delete your own posts');
+    }
+
+    // 2. Collect all object keys from the post's media for MinIO cleanup
+    const objectKeys = post.media
+      .map((m) => m.object_key)
+      .filter((key) => key && key.length > 0);
+
+    // 3. Delete media files from MinIO first (no stale files if DB delete fails)
+    if (objectKeys.length > 0) {
+      await this.storage.deleteObjects(objectKeys);
+    }
+
+    // 4. Delete the post from DB + decrement posts_count in a transaction
+    //    Prisma cascading onDelete handles: post_media, likes, comments, notifications
+    await this.prisma.$transaction([
+      this.prisma.posts.delete({
+        where: { id: postId },
+      }),
+      this.prisma.profiles.update({
+        where: { id: post.profile_id },
+        data: {
+          posts_count: { decrement: 1 },
+        },
+      }),
+    ]);
+
+    return { message: 'Post and all associated media deleted' };
+  }
 }
