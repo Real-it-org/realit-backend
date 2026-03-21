@@ -112,16 +112,38 @@ export class PostsService {
       throw new ForbiddenException('You can only confirm media for your own posts');
     }
 
-    // 2. Update status of all pending media for this post to 'active'
-    await this.prisma.post_media.updateMany({
+    // 2. Check if there are any pending media items to confirm
+    //    (guards against double-confirmation inflating posts_count)
+    const pendingMediaCount = await this.prisma.post_media.count({
       where: {
         post_id: dto.post_id,
         status: MediaStatus.pending,
       },
-      data: {
-        status: MediaStatus.active
-      }
     });
+
+    if (pendingMediaCount === 0) {
+      return { message: 'Media already confirmed' };
+    }
+
+    // 3. Update status of all pending media for this post to 'active'
+    //    and increment posts_count on the profile in a single transaction
+    await this.prisma.$transaction([
+      this.prisma.post_media.updateMany({
+        where: {
+          post_id: dto.post_id,
+          status: MediaStatus.pending,
+        },
+        data: {
+          status: MediaStatus.active,
+        },
+      }),
+      this.prisma.profiles.update({
+        where: { id: post.profile_id },
+        data: {
+          posts_count: { increment: 1 },
+        },
+      }),
+    ]);
 
     return { message: 'Media confirmed' };
   }
