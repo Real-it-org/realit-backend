@@ -63,6 +63,14 @@ export class ProfileService {
       include: { media: { orderBy: { position: 'asc' } } },
     });
 
+    // Batch-fetch likes for the current user
+    const postIds = posts.map((p) => p.id);
+    const userLikes = await this.prisma.likes.findMany({
+      where: { profile_id: profile.id, post_id: { in: postIds } },
+      select: { post_id: true },
+    });
+    const likedPostIds = new Set(userLikes.map((l) => l.post_id));
+
     const postsWithSignedMedia = await Promise.all(
       posts.map(async (post) => ({
         id: post.id,
@@ -79,6 +87,7 @@ export class ProfileService {
         likes_count: post.likes_count,
         comments_count: post.comments_count,
         created_at: post.created_at,
+        is_liked: likedPostIds.has(post.id),
       })),
     );
 
@@ -87,10 +96,16 @@ export class ProfileService {
 
   async getUserPostsByProfileId(
     profileId: string,
+    currentUserId: string,
     pagination: PaginationQueryDto,
   ): Promise<PostResponseDto[]> {
     const { page = 1, limit = 10 } = pagination;
     const skip = (page - 1) * limit;
+
+    // Get current user's profile for like lookups
+    const currentProfile = await this.prisma.profiles.findUnique({
+      where: { user_id: currentUserId },
+    });
 
     const posts = await this.prisma.posts.findMany({
       where: { profile_id: profileId },
@@ -100,6 +115,17 @@ export class ProfileService {
       include: { media: { orderBy: { position: 'asc' } } },
     });
 
+    // Batch-fetch likes for the current user
+    const postIds = posts.map((p) => p.id);
+    const likedPostIds = new Set<string>();
+    if (currentProfile) {
+      const userLikes = await this.prisma.likes.findMany({
+        where: { profile_id: currentProfile.id, post_id: { in: postIds } },
+        select: { post_id: true },
+      });
+      userLikes.forEach((l) => likedPostIds.add(l.post_id));
+    }
+
     const postsWithSignedMedia = await Promise.all(
       posts.map(async (post) => ({
         id: post.id,
@@ -116,6 +142,7 @@ export class ProfileService {
         likes_count: post.likes_count,
         comments_count: post.comments_count,
         created_at: post.created_at,
+        is_liked: likedPostIds.has(post.id),
       })),
     );
 

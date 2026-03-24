@@ -4,6 +4,7 @@ import { CreatePostDto } from './dto/create-post.dto';
 import { CreatePostResponseDto } from './dto/create-post-response.dto';
 import { ConfirmPostMediaDto } from './dto/confirm-post-media.dto';
 import { DeletePostResponseDto } from './dto/delete-post-response.dto';
+import { ToggleLikeResponseDto } from './dto/toggle-like-response.dto';
 import {
   ApiBearerAuth,
   ApiTags,
@@ -58,5 +59,20 @@ export class PostsController {
   ): Promise<DeletePostResponseDto> {
     return this.postsService.deletePost(req.user.sub, id);
   }
-}
 
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Toggle like/unlike on a post' })
+  @ApiParam({ name: 'id', description: 'Post ID (UUID)' })
+  @ApiResponse({
+    status: 200,
+    description: 'Like toggled successfully',
+    type: ToggleLikeResponseDto,
+  })
+  @Post(':id/like')
+  async toggleLike(
+    @Request() req: any,
+    @Param('id') id: string,
+  ): Promise<ToggleLikeResponseDto> {
+    return this.postsService.toggleLike(req.user.sub, id);
+  }
+}

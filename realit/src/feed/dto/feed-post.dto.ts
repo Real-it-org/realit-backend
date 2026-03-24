@@ -53,4 +53,7 @@ export class FeedPostDto {
 
     @ApiProperty({ type: FeedPostAuthorDto })
     author: FeedPostAuthorDto;
+
+    @ApiProperty()
+    is_liked: boolean;
 }

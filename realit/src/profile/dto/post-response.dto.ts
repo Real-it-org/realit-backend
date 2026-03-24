@@ -36,4 +36,7 @@ export class PostResponseDto {
 
   @ApiProperty()
   created_at: Date;
+
+  @ApiProperty()
+  is_liked: boolean;
 }

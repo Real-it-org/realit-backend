@@ -117,8 +117,9 @@ export class ProfileController {
   })
   async getPublicUserPosts(
     @Param('id') profileId: string,
+    @GetCurrentUser('sub') currentUserId: string,
     @Query() pagination: PaginationQueryDto,
   ): Promise<PostResponseDto[]> {
-    return this.profileService.getUserPostsByProfileId(profileId, pagination);
+    return this.profileService.getUserPostsByProfileId(profileId, currentUserId, pagination);
   }
 }
