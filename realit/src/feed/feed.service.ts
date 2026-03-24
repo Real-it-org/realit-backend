@@ -76,7 +76,18 @@ export class FeedService {
             },
         });
 
-        // 5. Sign media URLs and shape response
+        // 5. Fetch which of these posts the current user has liked
+        const postIds = posts.map((p) => p.id);
+        const userLikes = await this.prisma.likes.findMany({
+            where: {
+                profile_id: myProfile.id,
+                post_id: { in: postIds },
+            },
+            select: { post_id: true },
+        });
+        const likedPostIds = new Set(userLikes.map((l) => l.post_id));
+
+        // 6. Sign media URLs and shape response
         const feedPosts: FeedPostDto[] = await Promise.all(
             posts.map(async (post) => ({
                 id: post.id,
@@ -99,6 +110,7 @@ export class FeedService {
                     display_name: post.profile.display_name,
                     avatar_url: post.profile.avatar_url,
                 },
+                is_liked: likedPostIds.has(post.id),
             })),
         );
 

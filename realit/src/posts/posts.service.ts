@@ -192,4 +192,76 @@ export class PostsService {
 
     return { message: 'Post and all associated media deleted' };
   }
+
+  async toggleLike(userId: string, postId: string) {
+    // 1. Get user's profile
+    const profile = await this.prisma.profiles.findUnique({
+      where: { user_id: userId },
+    });
+
+    if (!profile) {
+      throw new NotFoundException('Profile not found');
+    }
+
+    // 2. Verify post exists
+    const post = await this.prisma.posts.findUnique({
+      where: { id: postId },
+    });
+
+    if (!post) {
+      throw new NotFoundException('Post not found');
+    }
+
+    // 3. Check if already liked
+    const existingLike = await this.prisma.likes.findUnique({
+      where: {
+        profile_id_post_id: {
+          profile_id: profile.id,
+          post_id: postId,
+        },
+      },
+    });
+
+    if (existingLike) {
+      // Unlike: delete the like and decrement likes_count
+      await this.prisma.$transaction([
+        this.prisma.likes.delete({
+          where: {
+            profile_id_post_id: {
+              profile_id: profile.id,
+              post_id: postId,
+            },
+          },
+        }),
+        this.prisma.posts.update({
+          where: { id: postId },
+          data: { likes_count: { decrement: 1 } },
+        }),
+      ]);
+
+      return {
+        liked: false,
+        likes_count: post.likes_count - 1,
+      };
+    }
+
+    // Like: create the like and increment likes_count
+    await this.prisma.$transaction([
+      this.prisma.likes.create({
+        data: {
+          profile_id: profile.id,
+          post_id: postId,
+        },
+      }),
+      this.prisma.posts.update({
+        where: { id: postId },
+        data: { likes_count: { increment: 1 } },
+      }),
+    ]);
+
+    return {
+      liked: true,
+      likes_count: post.likes_count + 1,
+    };
+  }
 }
